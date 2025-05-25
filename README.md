@@ -1,4 +1,5 @@
-# Randomness-attack-
+# Randomness-attack- run smae code get diffirent result
+
 ## 1- why we need randomness in web3
    * Games NFT (Non Fungible Tokens  ) [ERC721](https://docs.openzeppelin.com/contracts/3.x/erc721)  Choose Winner
    * 🏛️ DAO = Decentralized Autonomous Organization choose Member to Voting
