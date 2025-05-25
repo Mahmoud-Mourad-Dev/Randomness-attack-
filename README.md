@@ -6,4 +6,5 @@
    * Validatores , committes , nodes  proof of stake (ethereum2, polkadot ,Algorand)
    * Defi Decentralized Finance
 ## 2- what is Determinisitic System
-   * Same Input == Same Outbut 
+   * Same Input == Same Outbut
+     ![Image](https://github.com/user-attachments/assets/266e1bd8-ba9d-4746-a793-4fb934ed254b)
