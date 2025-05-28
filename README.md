@@ -1,4 +1,4 @@
-# Randomness-attack- run smae code get diffirent result
+# Randomness-attack- run same code get diffirent result
 
 ## 1- why we need randomness in web3
    * Games NFT (Non Fungible Tokens  ) [ERC721](https://docs.openzeppelin.com/contracts/3.x/erc721)  Choose Winner
@@ -8,4 +8,11 @@
    * Defi Decentralized Finance
 ## 2- what is Determinisitic System
    * Same Input == Same Outbut
-     ![Image](https://github.com/user-attachments/assets/266e1bd8-ba9d-4746-a793-4fb934ed254b)
+    
+  ```solidity
+ function test(uint256 a) public pure returns(uint256){
+      return a*2;
+   }          // same input same output
+   
+```
+ ![Image](https://github.com/user-attachments/assets/266e1bd8-ba9d-4746-a793-4fb934ed254b)
