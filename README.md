@@ -4,6 +4,7 @@ run same code get diffirent result
 
 ## 2- what is Determinisitic System?
    * Same Input == Same Outbut
+   * every node must agree on the same state
     
   ```solidity
  function test(uint256 a) public pure returns(uint256){
