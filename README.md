@@ -52,6 +52,17 @@ Command to deploy on sepolia
 ```
  forge create <contract path> --rpc-url <sepolia rpc>  --private-key <your private key> --value <charge contract with ethereum> --broadcast
 ```
+# 🔌 Who Provides RPC Endpoints?
+
+There are several popular providers that offer reliable RPC endpoints for interacting with blockchain networks:
+
+- [Infura](https://infura.io)
+- [Alchemy](https://www.alchemy.com)
+- [Ankr](https://www.ankr.com)
+- [QuickNode](https://www.quicknode.com)
+
+Alternatively, you can run your own Ethereum node (e.g., using Geth or Nethermind) and host your own RPC endpoint for full control and privacy.
+
 
 Command to check Balance
 ```
