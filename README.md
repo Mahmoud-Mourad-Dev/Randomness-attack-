@@ -68,6 +68,11 @@ Command to check Balance
 ```
 cast balance 0xYourContractAddress --rpc-url <your rpc>
 ```
+convert from wei to ether
+
+```
+cast from-wei 1000000000000000000
+```
 
 ## Smart contract to attack the Game
 
