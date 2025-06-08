@@ -72,7 +72,52 @@ convert from wei to ether
 
 ```
 cast from-wei 1000000000000000000
+
 ```
+
+# Scritp to deploy Game Contract 
+```solidity
+//SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.13;
+
+import "forge-std/Script.sol";
+import "src/Game.sol";
+
+contract DeployGame is Script {
+    function run() external{
+
+        vm.startBroadcast() ;
+
+       Game game = new Game{value: 0.01 ether}();
+ 
+
+
+        vm.stopBroadcast ();
+
+    }
+}
+```
+> ❗ **تنبيه مهم (في حالتك):**  
+> طالما عقد `Game` عنده constructor عليه `payable`، يعني محتاج تديله فلوس وقت النشر، يبقى لازم تكتب السطر كده:
+>
+> ```solidity
+> Game game = new Game{value: 0.01 ether}();
+> ```
+>
+> عشان تبعتله `0.01 ETH` وقت النشر.
+
+> 💡 **ملاحظة إضافية:**  
+> لو انت بتدفع `value` وقت النشر (عشان العقد بياخد فلوس في الـ `constructor`)، لازم تكتبها جوه `new Game{value: ...}` جوه السكريبت:
+>
+> ```solidity
+> Game game = new Game{value: 0.01 ether}();
+> ```
+>
+> مش هينفع تعتمد بس على `--value` من CLI، لازم الاتنين مع بعض.
+ركز إن --broadcast لازم يكون قبل --value.
+
+
+
 
 ## Smart contract to attack the Game
 
