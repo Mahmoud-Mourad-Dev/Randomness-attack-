@@ -164,6 +164,30 @@ Command to check Balance
 ```
 cast balance 0xYourContractAddress --rpc-url <your rpc>
 ```
+## script to deploy Attacker contract 
+
+```solidity
+
+//SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.13;
+
+import "forge-std/Script.sol";
+import "src/Attacker.sol";
+contract DeployAttacker is Script{
+
+    
+    function run() external{
+
+        vm.startBroadcast();
+
+        Attacker attacker = new Attacker{value : 0}(0xC1685e8D090D914112afaadD29Ec5A7eB4185957);
+
+
+        vm.stopBroadcast();
+    }
+}
+```
+
 
 
 
