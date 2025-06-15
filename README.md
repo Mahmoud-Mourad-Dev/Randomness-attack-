@@ -285,6 +285,115 @@ contract GameTest is Test {
     }
 }
 ```
+```solidity
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.28;
+
+import "forge-std/Test.sol";
+import "../src/Game.sol";
+
+contract GameTest is Test {
+    Game game;
+    address player1 = address(1);
+    address player2 = address(2);
+    uint256 initialBalance = 1 ether;
+
+    function setUp() public {
+        // Deploy the game contract with initial ether balance
+        vm.deal(address(this), initialBalance);
+        game = new Game{value: initialBalance}();
+    }
+
+    function testInitialBalance() public {
+        assertEq(address(game).balance, initialBalance);
+    }
+
+    function testCorrectGuessWins() public {
+        // Fund player1
+        vm.deal(player1, 1 ether);
+        
+        // Predict the random number (which is block.timestamp + block.number)
+        uint256 correctGuess = block.timestamp + block.number;
+        
+        // Player1 makes the correct guess
+        vm.prank(player1);
+        game.play(correctGuess);
+        
+        // Player1 should receive the contract balance
+        assertEq(player1.balance, initialBalance + 1 ether);
+        assertEq(address(game).balance, 0);
+    }
+
+    function testIncorrectGuessLoses() public {
+        // Fund player2
+        vm.deal(player2, 1 ether);
+        
+        // Player2 makes an incorrect guess
+        vm.prank(player2);
+        game.play(12345); // Obviously wrong
+        
+        // Contract balance should remain unchanged
+        assertEq(address(game).balance, initialBalance);
+        assertEq(player2.balance, 1 ether); // No change
+    }
+
+    function testCannotWinWithWrongGuess() public {
+        // Fund player1
+        vm.deal(player1, 1 ether);
+        
+        // Record logs
+        vm.recordLogs();
+        
+        // Player1 makes wrong guess
+        vm.prank(player1);
+        game.play(block.timestamp + block.number + 1); // Off by one
+        
+        // Check that no transfer occurred
+        Vm.Log[] memory entries = vm.getRecordedLogs();
+        assertEq(entries.length, 0);
+        assertEq(address(game).balance, initialBalance);
+    }
+
+    function testMultipleAttempts() public {
+        // Fund both players
+        vm.deal(player1, 1 ether);
+        vm.deal(player2, 1 ether);
+        
+        // First player fails
+        vm.prank(player1);
+        game.play(123);
+        
+        // Second player succeeds
+        uint256 correctGuess = block.timestamp + block.number;
+        vm.prank(player2);
+        game.play(correctGuess);
+        
+        // Check balances
+        assertEq(player1.balance, 1 ether); // No change
+        assertEq(player2.balance, initialBalance + 1 ether); // Won the prize
+        assertEq(address(game).balance, 0);
+    }
+
+    function testCannotWinAfterPrizeClaimed() public {
+        // First player wins
+        uint256 correctGuess = block.timestamp + block.number;
+        vm.prank(player1);
+        game.play(correctGuess);
+        
+        // Contract should be empty now
+        assertEq(address(game).balance, 0);
+        
+        // Second player tries to win but contract has no funds
+        vm.deal(player2, 1 ether);
+        vm.prank(player2);
+        game.play(correctGuess);
+        
+        // No change in balances
+        assertEq(player2.balance, 1 ether);
+        assertEq(address(game).balance, 0);
+    }
+}
+```
 
 
 
