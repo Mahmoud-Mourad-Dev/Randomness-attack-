@@ -187,6 +187,104 @@ contract DeployAttacker is Script{
     }
 }
 ```
+# write test in foundry
+
+```solidity
+```solidity
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.28;
+
+import "forge-std/Test.sol";
+import "../src/Game.sol";
+
+contract GameTest is Test {
+    Game game;
+    address player = address(0x123);
+    address anotherPlayer = address(0x456);
+    uint256 initialBalance = 1 ether;
+
+    // Set up the test environment
+    function setUp() public {
+        // Deploy the Game contract with 1 ETH
+        game = new Game{value: initialBalance}();
+        // Fund players with ETH
+        vm.deal(player, 1 ether);
+        vm.deal(anotherPlayer, 1 ether);
+    }
+
+    // Test successful guess (correct number)
+    function testPlayCorrectGuess() public {
+        // Calculate the expected "random" number
+        uint256 correctGuess = block.timestamp + block.number;
+
+        // Simulate player calling play
+        vm.prank(player);
+        game.play(correctGuess);
+
+        // Verify player received the contract's balance
+        assertEq(player.balance, 1 ether + initialBalance, "Player should receive contract balance");
+        // Verify contract balance is now 0
+        assertEq(address(game).balance, 0, "Contract balance should be 0");
+    }
+
+    // Test failed guess (incorrect number)
+    function testPlayIncorrectGuess() public {
+        // Calculate an incorrect guess
+        uint256 incorrectGuess = block.timestamp + block.number + 1;
+
+        // Simulate player calling play
+        vm.prank(player);
+        game.play(incorrectGuess);
+
+        // Verify player's balance is unchanged
+        assertEq(player.balance, 1 ether, "Player balance should not change");
+        // Verify contract balance is unchanged
+        assertEq(address(game).balance, initialBalance, "Contract balance should remain unchanged");
+    }
+
+    // Test playing with zero contractseca balance
+    function testPlayWithZeroBalance() public {
+        // Deploy a new Game contract with 0 ETH
+        Game emptyGame = new Game();
+        uint256 correctGuess = block.timestamp + block.number;
+
+        // Simulate player calling play
+        vm.prank(player);
+        emptyGame.play(correctGuess);
+
+        // Verify player's balance is unchanged (no ETH to win)
+        assertEq(player.balance, 1 ether, "Player balance should not change");
+        // Verify contract balance is still 0
+        assertEq(address(emptyGame).balance, 0, "Contract balance should be 0");
+    }
+
+    // Test multiple guesses in the same block
+    function testMultipleGuessesSameBlock() public {
+        // Calculate the correct guess
+        uint256 correctGuess = block.timestamp + block.number;
+
+        // First player wins
+        vm.prank(player);
+        game.play(correctGuess);
+
+        // Verify contract is empty
+        assertEq(address(game).balance, 0, "Contract balance should be 0 after first win");
+
+        // Second player tries to play in the same block
+        vm.prank(anotherPlayer);
+        game.play(correctGuess);
+
+        // Verify second player's balance is unchanged
+        assertEq(anotherPlayer.balance, 1 ether, "Second player balance should not change");
+    }
+
+    // Test that the contract accepts ETH in constructor
+    function testConstructorReceivesETH() public {
+        // Verify initial balance set in setUp
+        assertEq(address(game).balance, initialBalance, "Contract should have initial balance");
+    }
+}
+```
 
 
 
